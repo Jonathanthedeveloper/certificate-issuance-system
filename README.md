@@ -11,7 +11,7 @@ A blockchain-based certificate management system built with Next.js, Prisma, and
 1. Clone the repository:
 
 ```powershell
-git clone https://github.com/your-org/certifyedu.git
+git clone https://github.com/Jonathanthedeveloper/certificate-issuance-system.git
 cd certificate-issuance-system
 ```
 
