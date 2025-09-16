@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  INSTITUTION_ADMIN
+  STAFF
+  STUDENT
+}
+
+model User {
+  id            String       @id @default(uuid())
+  institutionId String? // Optional for admins/staff across institutions
+  institution   Institution? @relation(fields: [institutionId], references: [id])
+  walletAddress String       @unique
+  firstName     String?
+  lastName      String?
+  role          Role?
+  student       Student?
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Institution {
+  id                String               @id @default(uuid())
+  onChainId         String? // Solana PDA Pubkey in base58 format
+  latestTxHash      String? // Latest transaction signature for this institution
+  name              String
+  type              String
+  country           String
+  state             String
+  city              String
+  address           String
+  website           String?
+  phoneNumber       String?
+  description       String?
+  licenseNumber     String?
+  accreditationBody String?
+  students          StudentInstitution[]
+  users             User[]
+  certificates      Certificate[]
+  isActive          Boolean              @default(true)
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+}
+
+model Student {
+  id           String               @id @default(uuid())
+  userId       String               @unique
+  user         User                 @relation(fields: [userId], references: [id])
+  institutions StudentInstitution[]
+  firstName    String
+  lastName     String
+  email        String?
+  dateOfBirth  DateTime?
+  matricNumber String
+  certificates Certificate[]
+  isActive     Boolean              @default(true)
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+}
+
+model StudentInstitution {
+  id             String      @id @default(uuid())
+  studentId      String
+  student        Student     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  institutionId  String
+  institution    Institution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+  enrollmentDate DateTime?
+  graduationDate DateTime?
+  isActive       Boolean     @default(true)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([studentId, institutionId])
+}
+
+model Certificate {
+  id                String      @id @default(uuid())
+  onChainId         String? // Solana PDA Pubkey in base58 format
+  latestTxHash      String? // Latest transaction signature for this certificate
+  institutionId     String
+  institution       Institution @relation(fields: [institutionId], references: [id])
+  studentId         String
+  student           Student     @relation(fields: [studentId], references: [id])
+  certificateNumber String      @unique
+  title             String
+  description       String?
+  issueDate         DateTime
+  completionDate    DateTime
+  gpa               Float?
+  honors            String?
+  isRevoked         Boolean     @default(false)
+  revokedReason     String?
+  revokedDate       DateTime?
+  verificationHash  String
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+}

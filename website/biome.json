@@ -1,0 +1,51 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignoreUnknown": false,
+		"experimentalScannerIgnores": [".next/**", "node_modules/**", "prisma/**"],
+		"includes": [
+			"app/**",
+			"components/**",
+			"lib/**",
+			"providers/**",
+			"features/**",
+			"styles/**"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"correctness": {
+				"useUniqueElementIds": {
+					"level": "error",
+					"options": {
+						"excludedComponents": ["Input", "Textarea"]
+					}
+				}
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
+}
