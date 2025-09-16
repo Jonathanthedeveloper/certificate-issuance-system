@@ -2,10 +2,6 @@
 
 A blockchain-based certificate management system built with Next.js, Prisma, and Solana integration.
 
-# CertifyEdu - Certificate Issuance System
-
-A blockchain-based certificate management system built with Next.js, Prisma, and Solana integration.
-
 ## Quick start (clone → run)
 
 1. Clone the repository:
